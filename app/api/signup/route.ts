@@ -54,8 +54,16 @@ export async function POST(req: NextRequest) {
     )
   } catch (error) {
     console.error('Signup error:', error)
+    console.error('Error details:', {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    })
     return NextResponse.json(
-      { message: 'Szerver hiba történt' },
+      { 
+        message: 'Szerver hiba történt',
+        error: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown') : undefined
+      },
       { status: 500 }
     )
   }
